@@ -1,12 +1,19 @@
 import { Joystick } from 'react-joystick-component';
 
-const JoystickPhone = () => {
+const JoystickPhone = ({ translateX, translateZ ,setTranslateX, setTranslateZ }) => {
     const handleMove = (event) => {
             console.log('Move:', event);
+            setTranslateX(event.x);
+            setTranslateZ(event.y);
+            console.group("joystick")
+            console.log("translateX",translateX)
+            console.log("translateY",translateZ)
+            console.groupEnd()
         }
 
         const handleStop = (event) => {
-            console.log('Stop:', event);
+            setTranslateX(0);
+            setTranslateZ(0);
         }
     return(
             <div className="joystickContainer">
@@ -22,7 +29,6 @@ const JoystickPhone = () => {
         </div>
     )
 }
-
 export default JoystickPhone;
 
 

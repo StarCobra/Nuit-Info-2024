@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import React, { Suspense, useRef, useMemo } from "react";
+import React, { Suspense, useRef, useMemo, useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { Canvas, extend, useThree, useLoader, useFrame  } from "@react-three/fiber";
 import "./styles.css";
@@ -33,19 +33,69 @@ function Ocean() {
   return <water ref={ref} args={[geom, config]} rotation-x={-Math.PI / 2} />
 }
 
-function Box() {
-  const ref = useRef()
-  useFrame((state, delta) => {
-    ref.current.position.y = 10 + Math.sin(state.clock.elapsedTime) * 20
-    ref.current.rotation.x = ref.current.rotation.y = ref.current.rotation.z += delta
-  })
-  return (
-    <mesh ref={ref} scale={20}>
-      <boxGeometry />
-      <meshStandardMaterial />
-    </mesh>
-  )
-}
+// function Box() {
+//   const ref = useRef()
+//   useFrame((state, delta) => {
+//     ref.current.position.y = 10 + Math.sin(state.clock.elapsedTime) * 20
+//     ref.current.rotation.x = ref.current.rotation.y = ref.current.rotation.z += delta
+//   })
+
+
+// function Box(props) {
+//   const { translateX, translateZ: translateZ } = props;
+//   const meshRef = useRef();
+//   const [active, setActive] = useState(false);
+//   const [hovered, setHover] = useState(false);
+
+//   useEffect(() => {
+//   }, [translateX, translateZ]);
+
+//   useFrame((state, delta) => {
+//     if (meshRef.current) {
+//       meshRef.current.rotation.x += delta;
+//       meshRef.current.position.x += -translateX * delta;
+//       meshRef.current.position.z += translateZ * delta;
+//     }
+//   });
+
+//   return (
+//     <mesh ref={meshRef} scale={20}>
+//       <boxGeometry />
+//       <meshStandardMaterial />
+//     </mesh>
+//   );
+// }
+
+function Box(props) {
+    const { translateX, translateZ: translateZ } = props;
+    const meshRef = useRef();
+    const [active, setActive] = useState(false);
+    const [hovered, setHover] = useState(false);
+  
+    useEffect(() => {
+    }, [translateX, translateZ]);
+  
+    useFrame((state, delta) => {
+      if (meshRef.current) {
+        meshRef.current.rotation.x += delta;
+        meshRef.current.position.x += -translateX * delta;
+        meshRef.current.position.z += translateZ * delta;
+      }
+    });
+  
+    return (
+      <mesh
+        {...props}
+        ref={meshRef}
+        scale={active ? 1.5 : 1}
+        onClick={(event) => setActive(!active)}
+        onPointerOver={(event) => setHover(true)}
+        onPointerOut={(event) => setHover(false)}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+      </mesh>
+    );
+  }
 
 // function Box(props) {
 //     // This reference will give us direct access to the mesh
@@ -71,7 +121,11 @@ function Box() {
 //     );
 // }
 
-createRoot(document.getElementById("root")).render(
+function App() {
+    const [translateX, setTranslateX] = useState(0);
+    const [translateZ, setTranslateZ] = useState(0);
+  
+    return (
     <>
         <Canvas>
             <ambientLight intensity={Math.PI / 2} />
@@ -89,8 +143,8 @@ createRoot(document.getElementById("root")).render(
             />
             <pointLight position={[100, 100, 100]} />
             <pointLight position={[-100, -100, -100]} />
-            {/* <Box position={[-1.2, 0, 0]} />
-            <Box position={[1.2, 0, 0]} /> */}
+            <Box position={[-1.2, 0, 0]} translateX={translateX} translateZ={translateZ} />
+            <Box position={[1.2, 0, 0]} translateX={translateX} translateZ={translateZ} />
 
             {/* <mesh>
                 <planeGeometry attach="geometry" args={[25, 15]} />
@@ -104,6 +158,9 @@ createRoot(document.getElementById("root")).render(
             <Sky scale={1000} sunPosition={[500, 150, -1000]} turbidity={0.1} />
             <OrbitControls />
         </Canvas>
-        <JoystickPhone />
+        <JoystickPhone translateX={translateX} translateZ={translateZ} setTranslateX={setTranslateX} setTranslateZ={setTranslateZ} />
     </>
-);
+  );
+}
+
+createRoot(document.getElementById('root')).render(<App />);
