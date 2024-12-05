@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Canvas, useFrame } from '@react-three/fiber'
 import './styles.css'
+import WeathersEffectsComponent from './components/weathers/WeathersEffectsComponent'
 
 function Box(props) {
   // This reference will give us direct access to the mesh
@@ -12,7 +13,9 @@ function Box(props) {
   // Subscribe this component to the render-loop, rotate the mesh every frame
   useFrame((state, delta) => (meshRef.current.rotation.x += delta))
   // Return view, these are regular three.js elements expressed in JSX
+
   return (
+
     <mesh
       {...props}
       ref={meshRef}
@@ -27,6 +30,7 @@ function Box(props) {
 }
 
 createRoot(document.getElementById('root')).render(
+  <>
   <Canvas>
     <ambientLight intensity={Math.PI / 2} />
     <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
@@ -34,4 +38,6 @@ createRoot(document.getElementById('root')).render(
     <Box position={[-1.2, 0, 0]} />
     <Box position={[1.2, 0, 0]} />
   </Canvas>,
+  </>
+
 )
