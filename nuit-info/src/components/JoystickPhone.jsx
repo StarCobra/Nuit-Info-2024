@@ -1,4 +1,5 @@
 import { Joystick } from 'react-joystick-component';
+
 const JoystickPhone = () => {
     const handleMove = (event) => {
             console.log('Move:', event);
