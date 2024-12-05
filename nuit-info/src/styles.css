@@ -3,3 +3,19 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.joystickContainer {
+    display:none;
+    position: absolute;
+    bottom: 10%;
+    width: 100%;
+}
+
+@media screen and (max-width: 768px) and (orientation: portrait),
+    screen and (max-width: 1024px) and (orientation: landscape) {
+    .joystickContainer {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+    }
+}
