@@ -1,19 +1,26 @@
-import React, { useRef, useState } from 'react'
-import { createRoot } from 'react-dom/client'
-import { Canvas, useFrame } from '@react-three/fiber'
-import './styles.css'
-import { Joystick } from 'react-joystick-component'
-import JoystickPhone from './ui/JoystickPhone'
+import React, { useEffect, useRef, useState } from 'react';
+import './styles.css';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { createRoot } from 'react-dom/client';
+import JoystickPhone from "./ui/JoystickPhone";
 
 function Box(props) {
-  // This reference will give us direct access to the mesh
-  const meshRef = useRef()
-  // Set up state for the hovered and active state
-  const [hovered, setHover] = useState(false)
-  const [active, setActive] = useState(false)
-  // Subscribe this component to the render-loop, rotate the mesh every frame
-  useFrame((state, delta) => (meshRef.current.rotation.x += delta))
-  // Return view, these are regular three.js elements expressed in JSX
+  const { translateX, translateZ: translateZ } = props;
+  const meshRef = useRef();
+  const [active, setActive] = useState(false);
+  const [hovered, setHover] = useState(false);
+
+  useEffect(() => {
+  }, [translateX, translateZ]);
+
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x += delta;
+      meshRef.current.position.x += -translateX * delta;
+      meshRef.current.position.z += translateZ * delta;
+    }
+  });
+
   return (
     <mesh
       {...props}
@@ -25,18 +32,25 @@ function Box(props) {
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
     </mesh>
-  )
+  );
 }
 
-createRoot(document.getElementById('root')).render(
-  <>
-  <Canvas>
-    <ambientLight intensity={Math.PI / 2} />
-    <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
-    <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-    <Box position={[-1.2, 0, 0]} />
-    <Box position={[1.2, 0, 0]} />
-  </Canvas>
-  <JoystickPhone />
-  </>
-)
+function App() {
+  const [translateX, setTranslateX] = useState(0);
+  const [translateZ, setTranslateZ] = useState(0);
+
+  return (
+    <>
+      <Canvas>
+        <ambientLight intensity={Math.PI / 2} />
+        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+        <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
+        <Box position={[-1.2, 0, 0]} translateX={translateX} translateZ={translateZ} />
+        <Box position={[1.2, 0, 0]} translateX={translateX} translateZ={translateZ} />
+      </Canvas>
+      <JoystickPhone translateX={translateX} translateZ={translateZ} setTranslateX={setTranslateX} setTranslateZ={setTranslateZ} />
+    </>
+  );
+}
+
+createRoot(document.getElementById('root')).render(<App />);
