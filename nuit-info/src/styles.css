@@ -4,7 +4,8 @@
     box-sizing: border-box;
 }
 
-body, main {
+body,
+main {
     height: 100vh;
 }
 
@@ -16,3 +17,18 @@ body, main {
     bottom: 10%;
     width: 100%;
 }
+
+.modal-container {
+    width: 15rem;
+    border-radius: 12px;
+    box-shadow: inset;
+    animation: slit-in-horizontal .8s cubic-bezier(.25,.46,.45,.94) both;
+    z-index: 500;
+}
+
+.modal-content img {
+    width: 15rem;
+    animation: slit-in-horizontal .8s cubic-bezier(.25,.46,.45,.94) both;
+}
+
+@keyframes slit-in-horizontal{0%{transform:translateZ(-1400px);opacity:0}100%{transform:translateZ(0);opacity:1}}
