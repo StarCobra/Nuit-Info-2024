@@ -1,13 +1,12 @@
 import * as THREE from 'three'
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, forwardRef } from "react";
 import { Canvas, extend, useThree, useLoader, useFrame  } from "@react-three/fiber";
 import { Water } from 'three-stdlib'
 import { useTexture } from '@react-three/drei';
 
 extend({ Water })
 
-function Ocean() {
-  const ref = useRef()
+const Ocean = forwardRef((props, ref) => {
   const gl = useThree((state) => state.gl)
   const waterNormals = useTexture('/waternormals.jpeg')
   waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping
@@ -61,6 +60,6 @@ function Ocean() {
       gl_FragColor = vec4(normal, 1.0); // Couleur basée sur les normales
     }
   `} />
-}
+});
 
 export default Ocean;

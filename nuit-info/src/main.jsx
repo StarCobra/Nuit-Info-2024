@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { Canvas } from "@react-three/fiber";
 import "./styles.css";
@@ -11,7 +11,7 @@ import BoatCamera from './components/BoatCamera';
 function App() {
     const [translateX, setTranslateX] = useState(0);
     const [translateZ, setTranslateZ] = useState(0);
-
+    const oceanRef = useRef();
     return (
     <>
         <Canvas>
@@ -30,10 +30,10 @@ function App() {
             />
             <pointLight position={[100, 100, 100]} />
             <pointLight position={[-100, -100, -100]} />
-            <Boat translateX={translateX} translateZ={translateZ} />
+            <Boat translateX={translateX} translateZ={translateZ} oceanRef={oceanRef}/>
 
             <Suspense fallback={null}>
-                <Ocean />
+                <Ocean ref={oceanRef}/>
             </Suspense>
             <Sky scale={1000} sunPosition={[500, 150, -1000]} turbidity={0.1} />
             <BoatCamera translateX={translateX} translateZ={translateZ} />
