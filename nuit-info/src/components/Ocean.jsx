@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import React, { useRef, useMemo } from "react";
 import { Canvas, extend, useThree, useLoader, useFrame  } from "@react-three/fiber";
 import { Water } from 'three-stdlib'
+import { useTexture } from '@react-three/drei';
 
 extend({ Water })
 
