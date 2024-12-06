@@ -16,6 +16,7 @@ import 'primereact/resources/primereact.min.css'; // Core CSS
 import 'primeicons/primeicons.css'; // Icons
 import axios from 'axios';
 import { Image } from 'primereact/image';
+import Rabbit from "./components/Rabbit";
 function App() {
     const [translateX, setTranslateX] = useState(0);
     const [translateZ, setTranslateZ] = useState(0);
@@ -158,6 +159,7 @@ function App() {
             />
             <pointLight position={[100, 100, 100]} />
             <pointLight position={[-100, -100, -100]} />
+            <Rabbit />
             <Boat translateX={translateX} translateZ={translateZ} />
 
             <Suspense fallback={null}>

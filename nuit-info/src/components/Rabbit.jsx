@@ -1,20 +1,34 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
+import { Canvas, useLoader, extend } from '@react-three/fiber';
+import * as THREE from 'three';
+
+extend(THREE);
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { TextureLoader } from 'three';
+
+const rabbitModel = '/assets/sprite/boat/Rabbid.obj';
+const rabbitTexture1 = '/assets/textures/rabbit/Tex_0012_0.png';
+const rabbitTexture2 = '/assets/textures/rabbit/Tex_0018_0.png';
+const rabbitTexture3 = '/assets/textures/rabbit/Tex_0019_0.png';
+
 import { useFrame } from '@react-three/fiber';
 import { useLoader } from '@react-three/fiber';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { TextureLoader } from 'three';
 
-const Boat = (props) => {
+const Rabbit = (props) => {
     const { translateX, translateZ } = props;
     const boatRef = useRef();
-    const obj = useLoader(OBJLoader, '/assets/textures/sprite/boat/Sail.obj');
+    const obj = useLoader(OBJLoader, rabbitModel);
     const [texture1, texture2] = useLoader(TextureLoader, [
-        '/assets/textures/boat/Tex_0211_0.png',
-        '/assets/textures/boat/Tex_0212_0.png' // Corrected file name
+        rabbitTexture1,
+        rabbitTexture2,
+        rabbitTexture3
     ]);
 
     obj.traverse((child) => {
         if (child.isMesh) {
+            child.material.map = texture3; // Apply the first texture
             child.material.map = texture2; // Apply the first texture
             child.material.map = texture1; // Apply the second texture
         }
@@ -42,4 +56,4 @@ const Boat = (props) => {
     return <primitive ref={boatRef} object={obj} />;
 };
 
-export default Boat;
+export default Rabbit;
