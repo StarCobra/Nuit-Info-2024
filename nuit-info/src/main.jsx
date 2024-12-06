@@ -8,7 +8,6 @@ import Boat from './components/Boat';
 import Ocean from "./components/Ocean";
 import BoatCamera from './components/BoatCamera';
 
-
 function App() {
     const [translateX, setTranslateX] = useState(0);
     const [translateZ, setTranslateZ] = useState(0);
