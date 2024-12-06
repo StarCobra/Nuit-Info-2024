@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { useLoader } from '@react-three/fiber';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { TextureLoader } from 'three';
+import Rabbit from './Rabbit';
 
 const Boat = (props) => {
     const { translateX, translateZ } = props;
@@ -39,7 +40,11 @@ const Boat = (props) => {
         }
     });
 
-    return <primitive ref={boatRef} object={obj} />;
-};
+    return (
+        <group ref={boatRef}>
+            <primitive object={obj} />
+            <Rabbit translateX={translateX} translateZ={translateZ} />
+        </group>
+    );};
 
 export default Boat;
