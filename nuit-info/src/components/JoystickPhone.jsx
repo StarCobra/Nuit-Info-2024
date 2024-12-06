@@ -2,13 +2,8 @@ import { Joystick } from 'react-joystick-component';
 
 const JoystickPhone = ({ translateX, translateZ ,setTranslateX, setTranslateZ }) => {
     const handleMove = (event) => {
-            console.log('Move:', event);
             setTranslateX(event.x);
             setTranslateZ(event.y);
-            console.group("joystick")
-            console.log("translateX",translateX)
-            console.log("translateY",translateZ)
-            console.groupEnd()
         }
         const handleStart = (event) => {
             const accelerate = () => {
