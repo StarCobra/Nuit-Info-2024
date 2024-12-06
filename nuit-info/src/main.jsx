@@ -19,13 +19,33 @@ import WeatherDisplay from "./components/weathers/WeatherDisplay";
 import axios from 'axios';
 import { Image } from 'primereact/image';
 import Rabbit from "./components/Rabbit";
+import JSConfetti from 'js-confetti'
+
 function App() {
   const [translateX, setTranslateX] = useState(0);
   const [translateZ, setTranslateZ] = useState(0);
 
+  const emojis = ['😥', '😱', '😁', '😃', '💫', '🌸'];
+
+  const launchConfetti = () => {
+    confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        emojis: emojis,
+    });
+};
+const selectRandomEmoji = () => {
+  const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+  setSelectedEmoji(randomEmoji);
+  launchConfetti();
+};
   let weather;
   const [visible, setVisible] = useState(false);
   const [visibleWeather, setVisibleWeather] = useState(false);
+
+  const canvas = document.getElementById('your_custom_canvas_id')
+
 
   function getPosition(latitude, longitude) {
 
@@ -153,6 +173,7 @@ function App() {
         </Sidebar>
         <Button icon="pi pi-arrow-right" onClick={() => setVisible(true)} />
         <Button icon="pi pi-arrow-left" onClick={() => setVisibleWeather(true)} />
+        <Button icon="pi pi-arrow-right" onClick={() => selectRandomEmoji} />
 
       </div>
       <Canvas>
