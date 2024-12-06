@@ -1,8 +1,9 @@
-import * as THREE from 'three'
-import React, { useRef, useMemo } from "react";
-import { Canvas, extend, useThree, useLoader, useFrame  } from "@react-three/fiber";
-import { Water } from 'three-stdlib'
 import { useTexture } from '@react-three/drei';
+import { extend, useFrame, useThree } from "@react-three/fiber";
+import React, { useMemo, useRef } from "react";
+import * as THREE from 'three';
+import { Water } from 'three-stdlib';
+import { WEATHER_TYPES, WEATHER_TYPE_VALUE_CLEAR_SKY } from '../constants/weather';
 
 extend({ Water })
 
@@ -19,12 +20,12 @@ function Ocean() {
       waterNormals,
       sunDirection: new THREE.Vector3(1, 1, 1),
       sunColor: 0xffffff,
-      waterColor: 0x001e0f,
       distortionScale: 5.0,
+      waterColor: WEATHER_TYPES[WEATHER_TYPE_VALUE_CLEAR_SKY].color,
       fog: false,
       format: gl.encoding
     }),
-    [waterNormals]
+    [gl.encoding, waterNormals]
   )
   useFrame((state, delta) => {
     ref.current.material.uniforms.time.value += delta;
