@@ -35,3 +35,10 @@ main {
 }
 
 @keyframes slit-in-horizontal{0%{transform:translateZ(-1400px);opacity:0}100%{transform:translateZ(0);opacity:1}}
+
+.headerFIN{
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+}

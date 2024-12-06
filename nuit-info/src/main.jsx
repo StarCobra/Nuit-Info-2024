@@ -2,6 +2,7 @@ import React, { Suspense, useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { Canvas } from "@react-three/fiber";
 import "./styles.css";
+import { OrbitControls } from "@react-three/drei";
 import JoystickPhone from "./components/JoystickPhone";
 import { Sky } from '@react-three/drei'
 import Boat from './components/Boat';
@@ -14,15 +15,17 @@ import { Button } from 'primereact/button';
 import 'primereact/resources/themes/saga-blue/theme.css'; // Importez le thème ici
 import 'primereact/resources/primereact.min.css'; // Core CSS
 import 'primeicons/primeicons.css'; // Icons
+import WeatherDisplay from "./components/weathers/WeatherDisplay";
 import axios from 'axios';
 import { Image } from 'primereact/image';
 import Rabbit from "./components/Rabbit";
 function App() {
-    const [translateX, setTranslateX] = useState(0);
-    const [translateZ, setTranslateZ] = useState(0);
+  const [translateX, setTranslateX] = useState(0);
+  const [translateZ, setTranslateZ] = useState(0);
 
-    let weather;
+  let weather;
   const [visible, setVisible] = useState(false);
+  const [visibleWeather, setVisibleWeather] = useState(false);
 
   function getPosition(latitude, longitude) {
 
@@ -76,7 +79,7 @@ function App() {
         progress: undefined,
         theme: "light",
       });
-      axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=04daf9bf3c2e33aba6f85803c9eeb62d`)
+      axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=cce00159b97183936f67eee6bb380c15`)
         .then(response => {
           console.log(response.data.weather[0].main);
           weather = response.data.weather[0].main
@@ -108,69 +111,78 @@ function App() {
     { name: "Rhinoferos", src: "/QRCode/Rhinoferos.png" },
     { name: "Ursaring", src: "/QRCode/Ursaring.png" },
     { name: "Wailmer", src: "/QRCode/Wailmer.png" }
-];
+  ];
 
-    return (
+  return (
     <>
-         <div className="card flex justify-content-center sidebar-right text-right absolute">
+      <div className="headerFIN">
         <Sidebar visible={visible} onHide={() => setVisible(false)}>
           <h2>QR CODE</h2>
 
           <div>
             {pokemonList.map((pokemon, index) => (
-                <Image
-                    key={index}
-                    src={pokemon.src}
-                    alt={pokemon.name}
-                    preview
-                    width="250"
-                />
+              <Image
+                key={index}
+                src={pokemon.src}
+                alt={pokemon.name}
+                preview
+                width="250"
+              />
             ))}
-        </div>
-        <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <ToastContainer />
+          </div>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+          <ToastContainer />
+        </Sidebar>
+
+        <Sidebar visible={visibleWeather} position="right" onHide={() => setVisibleWeather(false)}>
+          <PrimeReactProvider>
+            <WeatherDisplay />
+          </PrimeReactProvider>
+
         </Sidebar>
         <Button icon="pi pi-arrow-right" onClick={() => setVisible(true)} />
-      </div>
-        <Canvas>
-            <ambientLight intensity={Math.PI / 2} />
-            <spotLight
-                position={[10, 10, 10]}
-                angle={0.15}
-                penumbra={1}
-                decay={0}
-                intensity={Math.PI}
-            />
-            <pointLight
-                position={[-10, -10, -10]}
-                decay={0}
-                intensity={Math.PI}
-            />
-            <pointLight position={[100, 100, 100]} />
-            <pointLight position={[-100, -100, -100]} />
-            <Rabbit />
-            <Boat translateX={translateX} translateZ={translateZ} />
+        <Button icon="pi pi-arrow-left" onClick={() => setVisibleWeather(true)} />
 
-            <Suspense fallback={null}>
-                <Ocean />
-            </Suspense>
-            <Sky scale={1000} sunPosition={[500, 150, -1000]} turbidity={0.1} />
-            <BoatCamera translateX={translateX} translateZ={translateZ} />
-        </Canvas>
-        <JoystickPhone translateX={translateX} translateZ={translateZ} setTranslateX={setTranslateX} setTranslateZ={setTranslateZ} />
-        <PrimeReactProvider>
-        </PrimeReactProvider>
+      </div>
+      <Canvas>
+        <ambientLight intensity={Math.PI / 2} />
+        <spotLight
+          position={[10, 10, 10]}
+          angle={0.15}
+          penumbra={1}
+          decay={0}
+          intensity={Math.PI}
+        />
+        <pointLight
+          position={[-10, -10, -10]}
+          decay={0}
+          intensity={Math.PI}
+        />
+        <pointLight position={[100, 100, 100]} />
+        <pointLight position={[-100, -100, -100]} />
+        <Rabbit />
+        <Boat translateX={translateX} translateZ={translateZ} />
+
+        <Suspense fallback={null}>
+          <Ocean />
+        </Suspense>
+        <Sky scale={1000} sunPosition={[500, 150, -1000]} turbidity={0.1} />
+        <BoatCamera translateX={translateX} translateZ={translateZ} />
+        <OrbitControls />
+      </Canvas>
+      <JoystickPhone translateX={translateX} translateZ={translateZ} setTranslateX={setTranslateX} setTranslateZ={setTranslateZ} />
+
     </>
   );
 }
