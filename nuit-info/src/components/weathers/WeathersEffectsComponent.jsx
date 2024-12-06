@@ -4,7 +4,7 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import '../../styles.css'
 
-const WeathersEffectsComponent = ({ lat, long, weather }) => {
+const WeathersEffectsComponent = ({weather }) => {
 
 
   let camera, scene, renderer, stats, parameters;
@@ -141,6 +141,23 @@ const WeathersEffectsComponent = ({ lat, long, weather }) => {
           "/assets/textures/sprite/snow/snowflake5.png"
         );
         break;
+        case "Clouds":
+          sprite1 = textureLoader.load(
+           "/assets/textures/sprite/snow/snowflake1.png"
+         );
+          sprite2 = textureLoader.load(
+           "/assets/textures/sprite/snow/snowflake2.png"
+         );
+          sprite3 = textureLoader.load(
+           "/assets/textures/sprite/snow/snowflake3.png"
+         );
+          sprite4 = textureLoader.load(
+           "/assets/textures/sprite/snow/snowflake4.png"
+         );
+          sprite5 = textureLoader.load(
+           "/assets/textures/sprite/snow/snowflake5.png"
+         );
+         break;
     }
 
 
@@ -229,12 +246,10 @@ const WeathersEffectsComponent = ({ lat, long, weather }) => {
     renderer.render(scene, camera);
   }
 
-  console.log(lat, long)
   return (
     <div>
-      <h2>lala</h2>
     </div>
-  );
+  )
 }
 
 export default WeathersEffectsComponent;
