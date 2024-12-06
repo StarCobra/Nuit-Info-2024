@@ -1,9 +1,9 @@
 import { useTexture } from '@react-three/drei';
 import { extend, useFrame, useThree } from "@react-three/fiber";
-import React, { useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import * as THREE from 'three';
 import { Water } from 'three-stdlib';
-import { WEATHER_TYPES, WEATHER_TYPE_VALUE_CLEAR_SKY } from '../constants/weather';
+import { WEATHER_TYPES, WEATHER_TYPE_VALUE_CLEAR_SKY } from '../const/weather';
 
 extend({ Water })
 

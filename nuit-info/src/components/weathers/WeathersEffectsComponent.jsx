@@ -1,8 +1,7 @@
-import React from 'react';
 import * as THREE from "three";
 import Stats from "three/examples/jsm/libs/stats.module.js";
-import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import '../../styles.css'
+import PropTypes from 'prop-types';
 
 const WeathersEffectsComponent = ({ lat, long, weather }) => {
 
@@ -238,3 +237,10 @@ const WeathersEffectsComponent = ({ lat, long, weather }) => {
 }
 
 export default WeathersEffectsComponent;
+
+WeathersEffectsComponent.propTypes = {
+  lat: PropTypes.number.isRequired,
+  long: PropTypes.number.isRequired,
+  weather: PropTypes.string.isRequired,
+};
+
