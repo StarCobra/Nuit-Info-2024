@@ -11,13 +11,13 @@ const Boat = (props) => {
     const obj = useLoader(OBJLoader, '/assets/textures/sprite/boat/Sail.obj');
     const [texture1, texture2] = useLoader(TextureLoader, [
         '/assets/textures/boat/Tex_0211_0.png',
-        '/assets/textures/boat/Tex_0212_0.png' // Corrected file name
+        '/assets/textures/boat/Tex_0212_0.png'
     ]);
 
     obj.traverse((child) => {
         if (child.isMesh) {
-            child.material.map = texture2; // Apply the first texture
-            child.material.map = texture1; // Apply the second texture
+            child.material.map = texture2;
+            child.material.map = texture1;
         }
     });
 
@@ -27,24 +27,23 @@ const Boat = (props) => {
             const x = boatRef.current.position.x;
             const z = boatRef.current.position.z;
 
-            // Calculate the wave height at the boat's position
             const wave1 = Math.sin(x * 0.1 + time * 1.5) * 1;
             const wave2 = Math.sin(x * 0.2 + time * 1.0) * 0.6;
             const wave3 = Math.cos(z * 0.15 + time * 2.0) * 0.8;
             const waveHeight = wave1 + wave2 + wave3;
 
-            // Update the boat's position
             boatRef.current.position.x += -translateX * delta;
             boatRef.current.position.z += translateZ * delta;
-            boatRef.current.position.y = waveHeight; // Set the boat's vertical position to the wave height
+            boatRef.current.position.y = waveHeight;
         }
     });
 
     return (
         <group ref={boatRef}>
             <primitive object={obj} />
-            <Rabbit translateX={translateX} translateZ={translateZ} />
+            <Rabbit boatRef={boatRef} />
         </group>
-    );};
+    );
+};
 
 export default Boat;
