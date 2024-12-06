@@ -14,6 +14,7 @@ function App() {
 
     return (
     <>
+    <p>test</p>
         <Canvas>
             <ambientLight intensity={Math.PI / 2} />
             <spotLight
