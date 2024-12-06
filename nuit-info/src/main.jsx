@@ -1,10 +1,10 @@
 import * as THREE from 'three'
 import React, { Suspense, useRef, useMemo, useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { Canvas, extend, useThree, useLoader, useFrame  } from "@react-three/fiber";
+import { Canvas, extend, useThree, useLoader, useFrame } from "@react-three/fiber";
 import "./styles.css";
 import JoystickPhone from "./components/JoystickPhone";
-import { OrbitControls, Sky } from '@react-three/drei'
+import { OrbitControls, Sky, useTexture } from '@react-three/drei'
 import { Water } from 'three-stdlib'
 
 extend({ Water })
@@ -12,59 +12,59 @@ extend({ Water })
 function Ocean() {
   const ref = useRef()
   const gl = useThree((state) => state.gl)
-  const waterNormals = useLoader(THREE.TextureLoader, '/waternormals.jpeg')
+  const waterNormals = useTexture('/waternormals.jpeg')
   waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping
-  const geom = useMemo(() => new THREE.PlaneGeometry(10000, 10000), [])
+  const geom = useMemo(() => new THREE.PlaneGeometry(10000, 10000, 128, 128), [])
   const config = useMemo(
     () => ({
-      textureWidth: 512,
-      textureHeight: 512,
+      textureWidth: 1024,
+      textureHeight: 1024,
       waterNormals,
-      sunDirection: new THREE.Vector3(),
+      sunDirection: new THREE.Vector3(1, 1, 1),
       sunColor: 0xffffff,
       waterColor: 0x001e0f,
-      distortionScale: 3.7,
+      distortionScale: 5.0,
       fog: false,
       format: gl.encoding
     }),
     [waterNormals]
   )
-  useFrame((state, delta) => (ref.current.material.uniforms.time.value += delta))
-  return <water ref={ref} args={[geom, config]} rotation-x={-Math.PI / 2} />
+  useFrame((state, delta) => {
+    ref.current.material.uniforms.time.value += delta;
+    const positionAttribute = ref.current.geometry.attributes.position;
+    const time = state.clock.getElapsedTime();
+
+    for (let i = 0; i < positionAttribute.count; i++) {
+      const x = positionAttribute.getX(i);
+      const y = positionAttribute.getY(i);
+      const wave1 = Math.sin(x * 0.1 + time * 1.5) * 1;
+      const wave2 = Math.sin(x * 0.2 + time * 1.0) * 0.6;
+      const wave3 = Math.cos(y * 0.15 + time * 2.0) * 0.8;
+      const z = wave1 + wave2 + wave3;
+      positionAttribute.setZ(i, z);
+    }
+    positionAttribute.needsUpdate = true;
+  })
+  return <water ref={ref} args={[geom, config]} rotation-x={-Math.PI / 2} vertexShader={`
+    uniform float u_time;
+    varying vec2 vUv;
+
+    void main() {
+      vUv = uv; // Passer les coordonnées UV au fragment shader
+      vec3 pos = position;
+      pos.z += sin(pos.x * 0.1 + u_time) * 0.5; // Exemple de déformation
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+  `} fragmentShader={`
+    uniform sampler2D waterNormals;
+    varying vec2 vUv;
+
+    void main() {
+      vec3 normal = texture2D(waterNormals, vUv).xyz; // Utiliser la texture pour les normales
+      gl_FragColor = vec4(normal, 1.0); // Couleur basée sur les normales
+    }
+  `} />
 }
-
-// function Box() {
-//   const ref = useRef()
-//   useFrame((state, delta) => {
-//     ref.current.position.y = 10 + Math.sin(state.clock.elapsedTime) * 20
-//     ref.current.rotation.x = ref.current.rotation.y = ref.current.rotation.z += delta
-//   })
-
-
-// function Box(props) {
-//   const { translateX, translateZ: translateZ } = props;
-//   const meshRef = useRef();
-//   const [active, setActive] = useState(false);
-//   const [hovered, setHover] = useState(false);
-
-//   useEffect(() => {
-//   }, [translateX, translateZ]);
-
-//   useFrame((state, delta) => {
-//     if (meshRef.current) {
-//       meshRef.current.rotation.x += delta;
-//       meshRef.current.position.x += -translateX * delta;
-//       meshRef.current.position.z += translateZ * delta;
-//     }
-//   });
-
-//   return (
-//     <mesh ref={meshRef} scale={20}>
-//       <boxGeometry />
-//       <meshStandardMaterial />
-//     </mesh>
-//   );
-// }
 
 function Box(props) {
     const { translateX, translateZ: translateZ } = props;
@@ -96,30 +96,6 @@ function Box(props) {
       </mesh>
     );
   }
-
-// function Box(props) {
-//     // This reference will give us direct access to the mesh
-//     const meshRef = useRef();
-//     // Set up state for the hovered and active state
-//     const [hovered, setHover] = useState(false);
-//     const [active, setActive] = useState(false);
-//     // Subscribe this component to the render-loop, rotate the mesh every frame
-//     useFrame((state, delta) => (meshRef.current.rotation.x += delta));
-//     // Return view, these are regular three.js elements expressed in JSX
-//     return (
-//         <mesh
-//             {...props}
-//             ref={meshRef}
-//             scale={active ? 1.5 : 1}
-//             onClick={(event) => setActive(!active)}
-//             onPointerOver={(event) => setHover(true)}
-//             onPointerOut={(event) => setHover(false)}
-//         >
-//             <boxGeometry args={[1, 1, 1]} />
-//             <meshStandardMaterial color={hovered ? "hotpink" : "orange"} />
-//         </mesh>
-//     );
-// }
 
 function App() {
     const [translateX, setTranslateX] = useState(0);
