@@ -41,9 +41,6 @@ const WeathersEffectsComponent = ({weather }) => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Showing stats
-    stats = new Stats();
-    document.body.appendChild(stats.dom);
 
     /* Modify with 3D Object with GUI
     const gui = new GUI();
@@ -219,7 +216,6 @@ const WeathersEffectsComponent = ({weather }) => {
     // This will create a loop rendering at each frame
     requestAnimationFrame(animate);
     render();
-    stats.update();
   }
   function render() {
     const time = Date.now() * 0.00005;
